@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  25RP19942-web:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - 25RP19942-db
+    volumes:
+      - ./src:/var/www/html
+
+  25RP19942-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: 25RP19942_shareride_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  25RP19942-phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: 25RP19942-db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    depends_on:
+      - 25RP19942-db
+
+volumes:
+  db_data:
